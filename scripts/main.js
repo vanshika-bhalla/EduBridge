@@ -104,6 +104,35 @@ document.addEventListener('DOMContentLoaded', function() {
     checkAuthState();
 });
 
+// Mobile navigation toggle
+document.addEventListener('DOMContentLoaded', function() {
+    const navToggle = document.getElementById('navToggle');
+    const primaryNavigation = document.getElementById('primaryNavigation');
+
+    if (!navToggle || !primaryNavigation) {
+        return;
+    }
+
+    navToggle.addEventListener('click', function() {
+        const isExpanded = primaryNavigation.classList.toggle('active');
+        navToggle.setAttribute('aria-expanded', String(isExpanded));
+    });
+
+    primaryNavigation.addEventListener('click', function(event) {
+        if (event.target.closest('a')) {
+            primaryNavigation.classList.remove('active');
+            navToggle.setAttribute('aria-expanded', 'false');
+        }
+    });
+
+    window.addEventListener('resize', function() {
+        if (window.innerWidth > 768) {
+            primaryNavigation.classList.remove('active');
+            navToggle.setAttribute('aria-expanded', 'false');
+        }
+    });
+});
+
 // Check auth state periodically
 setInterval(checkAuthState, 1000);
 
