@@ -10,12 +10,20 @@ if (storedQuizData) {
             throw new Error('invalid quiz data');
         }
     } catch (error) {
-        quizData = defaultQuizData;
-        try { localStorage.setItem('adminQuizzes', JSON.stringify(defaultQuizData)); } catch (e) {}
+        if (typeof defaultQuizData !== 'undefined') {
+            quizData = JSON.parse(JSON.stringify(defaultQuizData));
+            try { localStorage.setItem('adminQuizzes', JSON.stringify(quizData)); } catch (e) {}
+        } else {
+            quizData = {};
+        }
     }
 } else {
-    quizData = defaultQuizData;
-    try { localStorage.setItem('adminQuizzes', JSON.stringify(defaultQuizData)); } catch (e) {}
+    if (typeof defaultQuizData !== 'undefined') {
+        quizData = JSON.parse(JSON.stringify(defaultQuizData));
+        try { localStorage.setItem('adminQuizzes', JSON.stringify(quizData)); } catch (e) {}
+    } else {
+        quizData = {};
+    }
 }
 
 // Quiz state variables

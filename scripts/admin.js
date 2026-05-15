@@ -117,6 +117,70 @@ function getToastIcon(type) {
     }
 }
 
+// Non-blocking confirm modal that returns a Promise<boolean>
+function showConfirmModal(message, title = 'Confirm') {
+    return new Promise((resolve) => {
+        const overlay = document.createElement('div');
+        overlay.className = 'confirm-overlay';
+        Object.assign(overlay.style, {
+            position: 'fixed',
+            inset: '0',
+            background: 'rgba(0,0,0,0.4)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 9999
+        });
+
+        const dialog = document.createElement('div');
+        Object.assign(dialog.style, {
+            background: '#fff',
+            color: '#000',
+            padding: '20px',
+            borderRadius: '8px',
+            maxWidth: '90%',
+            width: '420px',
+            boxShadow: '0 6px 24px rgba(0,0,0,0.2)'
+        });
+
+        const titleEl = document.createElement('h3');
+        titleEl.textContent = title;
+        Object.assign(titleEl.style, { margin: '0 0 8px 0', fontSize: '16px' });
+
+        const msg = document.createElement('p');
+        msg.textContent = message;
+        Object.assign(msg.style, { margin: '0 0 16px 0' });
+
+        const actions = document.createElement('div');
+        Object.assign(actions.style, { display: 'flex', justifyContent: 'flex-end', gap: '8px' });
+
+        const cancelBtn = document.createElement('button');
+        cancelBtn.className = 'btn btn-outline';
+        cancelBtn.textContent = 'Cancel';
+
+        const okBtn = document.createElement('button');
+        okBtn.className = 'btn';
+        okBtn.textContent = 'Confirm';
+
+        actions.append(cancelBtn, okBtn);
+        dialog.append(titleEl, msg, actions);
+        overlay.appendChild(dialog);
+        document.body.appendChild(overlay);
+
+        function cleanup(result) {
+            try { overlay.remove(); } catch (e) {}
+            resolve(result);
+        }
+
+        cancelBtn.addEventListener('click', () => cleanup(false));
+        okBtn.addEventListener('click', () => cleanup(true));
+        // Close on overlay click
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) cleanup(false);
+        });
+    });
+}
+
 function requireAdmin(actionLabel) {
     if (isAdmin) {
         return true;
@@ -152,9 +216,10 @@ function validateContentItem(item) {
         return 'Description is required.';
     }
 
+    const normalizedTitle = item.title.trim().toLowerCase();
     const duplicate = contentItems.find(entry => {
         return entry.id !== item.id
-            && entry.title.toLowerCase() === item.title.toLowerCase()
+            && entry.title && entry.title.trim().toLowerCase() === normalizedTitle
             && entry.category === item.category;
     });
 
@@ -206,15 +271,22 @@ function initAdminDashboard() {
         return;
     }
 
-    // Derive admin from authenticated user role; avoid trusting a user-writable localStorage flag.
+    // Client-side demo gate only: `currentUser` is loaded from browser-controlled storage.
+    // This improves UX by hiding admin-only controls for non-admin demo users, but it is NOT
+    // a security boundary and must not be treated as server-authoritative authorization.
     isAdmin = !!(currentUser && currentUser.role === 'admin');
     accessLevel.textContent = isAdmin ? 'Admin Active' : 'Admin Required';
     adminNotice.hidden = isAdmin;
     seedDashboard.disabled = !isAdmin;
-
     // Do not persist an 'isAdmin' flag in localStorage as authoritative.
-    // Admin state is derived from the authenticated user's role.
+    // Admin state is derived from the authenticated user's role loaded from session/local state.
 
+    if (!isAdmin) {
+        setDashboardEnabled(false);
+        return;
+    }
+
+    // Only seed demo data for admin users to avoid seeding on casual visitors.
     seedDashboardData();
     contentItems = loadContentItems();
     quizData = loadQuizData();
@@ -233,7 +305,7 @@ function initAdminDashboard() {
     renderUsers();
     updateSummaryCounts();
 
-    setDashboardEnabled(isAdmin);
+    setDashboardEnabled(true);
 }
 
 function seedDashboardData() {
@@ -241,7 +313,7 @@ function seedDashboardData() {
         localStorage.setItem(storageKeys.content, JSON.stringify(fallbackContentItems));
     }
 
-    if (!localStorage.getItem(storageKeys.quizzes)) {
+    if (!localStorage.getItem(storageKeys.quizzes) && typeof defaultQuizData !== 'undefined') {
         localStorage.setItem(storageKeys.quizzes, JSON.stringify(defaultQuizData));
     }
 }
@@ -423,14 +495,13 @@ function handleContentEdit(id) {
     showToast(`Editing content: ${item.title}`, 'info');
 }
 
-function handleContentDelete(id) {
+async function handleContentDelete(id) {
     if (!requireAdmin('delete learning content')) {
         return;
     }
 
-    if (!confirm('Delete this content item?')) {
-        return;
-    }
+    const ok = await showConfirmModal('Delete this content item?', 'Delete content');
+    if (!ok) return;
 
     contentItems = contentItems.filter(entry => entry.id !== id);
     saveContentItems(contentItems);
@@ -576,20 +647,21 @@ function handleQuizEdit(course, index) {
     showToast('Editing quiz question.', 'info');
 }
 
-function handleQuizDelete(course, index) {
+async function handleQuizDelete(course, index) {
     if (!requireAdmin('delete quiz questions')) {
         return;
     }
 
-    if (!confirm('Delete this quiz question?')) {
-        return;
-    }
+    const ok = await showConfirmModal('Delete this quiz question?', 'Delete question');
+    if (!ok) return;
 
-    quizData[course].questions.splice(index, 1);
-    saveQuizData(quizData);
-    renderQuizQuestions();
-    updateSummaryCounts();
-    showToast('Quiz question removed.', 'success');
+    if (quizData[course] && Array.isArray(quizData[course].questions)) {
+        quizData[course].questions.splice(index, 1);
+        saveQuizData(quizData);
+        renderQuizQuestions();
+        updateSummaryCounts();
+        showToast('Quiz question removed.', 'success');
+    }
 }
 
 function bindUserFilters() {
@@ -659,62 +731,64 @@ function renderUsers() {
 }
 
 function toggleAdmin(userId) {
-    if (!requireAdmin('update user roles')) {
-        return;
-    }
-
-    if (currentUser && userId === currentUser.id) {
-        showToast('You cannot change your own role.', 'warning');
-        return;
-    }
-
-    const targetUser = users.find(user => user.id === userId);
-    if (!targetUser) {
-        showToast('User not found.', 'error');
-        return;
-    }
-
-    const nextRole = targetUser.role === 'admin' ? 'member' : 'admin';
-    if (!confirm(`Change ${targetUser.name} to ${nextRole}?`)) {
-        return;
-    }
-
-    users = users.map(user => {
-        if (user.id !== userId) {
-            return user;
+    (async () => {
+        if (!requireAdmin('update user roles')) {
+            return;
         }
-        const updatedUser = { ...user };
-        updatedUser.role = updatedUser.role === 'admin' ? 'member' : 'admin';
-        return updatedUser;
-    });
 
-    saveUsers(users);
-    syncCurrentUser();
-    updateSummaryCounts();
-    renderUsers();
-    showToast(`User role updated to ${nextRole}.`, 'success');
+        if (currentUser && userId === currentUser.id) {
+            showToast('You cannot change your own role.', 'warning');
+            return;
+        }
+
+        const targetUser = users.find(user => user.id === userId);
+        if (!targetUser) {
+            showToast('User not found.', 'error');
+            return;
+        }
+
+        const nextRole = targetUser.role === 'admin' ? 'member' : 'admin';
+        const ok = await showConfirmModal(`Change ${targetUser.name} to ${nextRole}?`, 'Change role');
+        if (!ok) return;
+
+        users = users.map(user => {
+            if (user.id !== userId) {
+                return user;
+            }
+            const updatedUser = { ...user };
+            updatedUser.role = nextRole;
+            return updatedUser;
+        });
+
+        saveUsers(users);
+        syncCurrentUser();
+        updateSummaryCounts();
+        renderUsers();
+        showToast(`User role updated to ${nextRole}.`, 'success');
+    })();
 }
 
 function removeUser(userId) {
-    if (!requireAdmin('remove users')) {
-        return;
-    }
+    (async () => {
+        if (!requireAdmin('remove users')) {
+            return;
+        }
 
-    const targetUser = users.find(user => user.id === userId);
-    if (!targetUser) {
-        showToast('User not found.', 'error');
-        return;
-    }
+        const targetUser = users.find(user => user.id === userId);
+        if (!targetUser) {
+            showToast('User not found.', 'error');
+            return;
+        }
 
-    if (!confirm(`Remove ${targetUser.name}?`)) {
-        return;
-    }
+        const ok = await showConfirmModal(`Remove ${targetUser.name}?`, 'Remove user');
+        if (!ok) return;
 
-    users = users.filter(user => user.id !== userId);
-    saveUsers(users);
-    renderUsers();
-    updateSummaryCounts();
-    showToast('User removed successfully.', 'success');
+        users = users.filter(user => user.id !== userId);
+        saveUsers(users);
+        renderUsers();
+        updateSummaryCounts();
+        showToast('User removed successfully.', 'success');
+    })();
 }
 
 function syncCurrentUser() {
@@ -743,14 +817,13 @@ function bindDashboardActions() {
         showToast('Dashboard refreshed.', 'info');
     });
 
-    seedDashboard.addEventListener('click', () => {
+    seedDashboard.addEventListener('click', async () => {
         if (!requireAdmin('restore demo data')) {
             return;
         }
 
-        if (!confirm('Restore the default demo data?')) {
-            return;
-        }
+        const ok = await showConfirmModal('Restore the default demo data?', 'Restore demo data');
+        if (!ok) return;
 
         localStorage.setItem(storageKeys.content, JSON.stringify(fallbackContentItems));
         localStorage.setItem(storageKeys.quizzes, JSON.stringify(defaultQuizData));
@@ -765,7 +838,28 @@ function bindDashboardActions() {
 
 function setDashboardEnabled(enabled) {
     const adminPanels = document.querySelectorAll('.admin-panel');
+    const adminSummary = document.getElementById('adminSummary');
+    const adminGrid = document.querySelector('.admin-grid');
+    const heroActions = document.querySelector('.hero-actions');
+
+    if (adminSummary) {
+        adminSummary.style.display = enabled ? '' : 'none';
+    }
+    if (adminGrid) {
+        adminGrid.style.display = enabled ? '' : 'none';
+    }
+    if (heroActions) {
+        heroActions.style.display = enabled ? '' : 'none';
+    }
     adminPanels.forEach(panel => {
+        // Hide admin panels entirely for non-admin users to avoid exposing admin UI.
+        if (!enabled) {
+            panel.style.display = 'none';
+        } else {
+            panel.style.display = '';
+        }
+
+        // Also disable form controls as a secondary safeguard.
         panel.querySelectorAll('input, select, textarea, button').forEach(control => {
             if (control.id === 'refreshDashboard') {
                 return;
@@ -836,21 +930,26 @@ function runSanityChecks() {
 
     // Validate quizData
     try {
+        const hasDefaults = typeof defaultQuizData !== 'undefined';
         if (!quizData || typeof quizData !== 'object') {
-            quizData = JSON.parse(JSON.stringify(defaultQuizData));
+            quizData = hasDefaults ? JSON.parse(JSON.stringify(defaultQuizData)) : {};
             saveQuizData(quizData);
             showToast('Repaired corrupted quiz data.', 'warning');
         } else {
             const courses = Object.keys(quizData);
             const invalidCourse = courses.some(c => !quizData[c] || !Array.isArray(quizData[c].questions));
             if (invalidCourse) {
-                quizData = JSON.parse(JSON.stringify(defaultQuizData));
+                quizData = hasDefaults ? JSON.parse(JSON.stringify(defaultQuizData)) : {};
                 saveQuizData(quizData);
                 showToast('Reset malformed quiz data to defaults.', 'warning');
             }
         }
     } catch (e) {
-        quizData = JSON.parse(JSON.stringify(defaultQuizData));
+        if (typeof defaultQuizData !== 'undefined') {
+            quizData = JSON.parse(JSON.stringify(defaultQuizData));
+        } else {
+            quizData = {};
+        }
         saveQuizData(quizData);
         showToast('Recovered quiz data.', 'warning');
     }
