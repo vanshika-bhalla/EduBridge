@@ -1,74 +1,58 @@
 # 🚀 EduBridge
 
-EduBridge is a **full-stack web application** that provides interactive learning resources, quizzes, and AI-driven guidance for students. It is designed to help learners explore web development, AI & ML concepts, and career opportunities through a modern, user-friendly platform.
+EduBridge is a full-stack web application designed to provide interactive learning resources, quizzes, and AI-powered guidance for students.  
+It helps learners explore web development, AI/ML concepts, and career opportunities through a modern and user-friendly platform.
 
 ---
 
-## 📌 Project Overview
+## 📌 Overview
 
-EduBridge bridges the gap between learning and career guidance by combining structured educational content with AI-powered assistance. Students can:
-- Learn technical topics  
-- Test their knowledge through quizzes  
-- Receive AI-powered career and learning suggestions  
+EduBridge bridges the gap between learning and career guidance by combining structured educational content with AI assistance.
+
+Users can:
+- Learn technical concepts
+- Attempt quizzes
+- Get AI-based guidance
+- Explore career paths
 
 ---
 
 ## ✨ Features
 
-- 🔐 **User Authentication** – Secure login and registration system  
-- 👤 **Personalized Profiles** – Users can manage and update their profiles  
-- 🧠 **Quizzes** – Assess knowledge on various technical topics  
-- 🤖 **AI Assistance** – AI-powered learning and guidance  
-- 🎯 **Career Guidance** – Resources and career advice  
-- 📱 **Responsive Design** – Works across desktops, tablets, and mobile devices  
+- 🔐 User Authentication (Login & Registration)
+- 👤 Personalized User Profiles
+- 🧠 Interactive Quizzes
+- 🤖 AI-Powered Learning Assistant
+- 🎯 Career Guidance System
+- 📱 Fully Responsive UI
 
 ---
 
-## 🛠 Technologies Used
+## 🛠 Tech Stack
 
 ### 🌐 Frontend
-- **HTML:** Semantic structure and accessibility 
-- **CSS:** Styling, layout, and responsiveness  
-- **JavaScript:** Interactivity and API handling  
+- HTML5
+- CSS3
+- JavaScript
 
 ### ⚙️ Backend
-- **Python:** Core backend language 
-- **Flask:** Lightweight web framework  
+- Python
+- Flask
 
 ### 🤖 APIs
-- **OpenAI API:** AI-driven features
+- OpenAI API
 
 ### 🔧 Tools
-- **Git:** Version control 
-- **GitHub:** Collaboration and project hosting  
+- Git & GitHub
 
----
+## 📂 Project Structure
 
-## 📂 Folder Structure
-EduBridge/  
-├── backend/  
-│ └── app.py  
-├── assets/  
-├── styles/  
-├── templates/  
-├── auth/  
-├── scripts/  
-├── server/  
-├── images/  
-├── index.html  
-├── login.html  
-├── profile.html  
-├── quiz.html  
-├── ai.html  
-├── webdev.html  
-├── career.html  
-
-```text
+```
 EduBridge/
 ├── backend/
-│ └── app.py
+│   └── app.py
 ├── assets/
-├── Styles/
+├── styles/
 ├── templates/
 ├── auth/
 ├── scripts/
@@ -76,180 +60,94 @@ EduBridge/
 ├── images/
 ├── index.html
 ├── login.html
+├── register.html
 ├── profile.html
 ├── quiz.html
 ├── ai.html
 ├── webdev.html
 ├── career.html
-└── register.html
 ```
 
----
+## ⚙️ Installation & Setup
 
-## ⚙️ Setup Instructions
-
-1️⃣ Clone the repository
+### 1️⃣ Clone Repository
 ```bash
-  git clone https://github.com/AditixAnand/EduBridge.git
-  cd EduBridge
-```
-2️⃣ Setup Python Backend
-```bash
-  cd backend
-  pip install flask python-dotenv openai
-```
-💡 Recommended: Use a virtual environment:
-```bash
-  python -m venv venv
-  venv\Scripts\activate   # Windows
-  source venv/bin/activate # macOS/Linux
-```
-3️⃣ Run the Backend
-```bash
-  python app.py
-```
-4️⃣ Open the Frontend  
-  Open index.html in your browser.  
-**✅ Important:**  
-Ensure JavaScript API calls point to:  
-```bash
-http://127.0.0.1:5000/
-```
-
----
-
-## 🤝 Contribution Guidelines
-1️⃣ Fork the repository  
-2️⃣ Create a new branch for your feature or fix  
-3️⃣ Work only on admin-approved issues  
-4️⃣ Write clean, readable, and well-documented code  
-5️⃣ Make meaningful commit messages  
-6️⃣ Submit a Pull Request with a clear description  
-7️⃣ Wait for Project Admin review before merge
-
----
-
-## 🏷 Issue Management
-1️⃣ Issues are created and managed by the Project Admin  
-2️⃣ Contributors must request issue assignment before starting work  
-3️⃣ One issue is assigned to one contributor at a time  
-4️⃣ Inactive contributors may be unassigned  
-5️⃣ Issues are clearly defined and achievable
-
-**Issue Labels Used**
-- easy
-- medium
-- hard
-- good first issue
-- bug
-- feature
-- documentation
-- help wanted
-
----
-
-## 🔍 Pull Request Rules
-1️⃣ PRs must be linked to an assigned issue  
-2️⃣ Code must be original and plagiarism-free  
-3️⃣ Low-effort, spam, or duplicate PRs will be rejected  
-4️⃣ Admin may request changes before approval  
-5️⃣ Only merged PRs are considered valid contributions
-### 1. Clone the repository
-
-`git clone <your-repo-url>`
-
+git clone https://github.com/AditixAnand/EduBridge.git
 cd EduBridge
+```
 
-### 2. Setup Python Backend
+### 2️⃣ Setup Backend
 
+```bash
 cd backend
-
 pip install flask python-dotenv openai
+```
+(Optional) Create Virtual Environment
+```
+python -m venv venv
+```
 
-### 3. Run the Backend
+Activate it:
 
+Windows:
+```
+venv\Scripts\activate
+```
+Mac/Linux:
+```
+source venv/bin/activate
+```
+3️⃣ Run Server
+```
 python app.py
+```
+4️⃣ Open Application
 
-### 4. Open Frontend
+Open index.html in your browser.
 
-Open index.html in your browser
-
-### Ensure JavaScript API calls point to:
-
+Backend runs at:
+```
 http://127.0.0.1:5000/
+```
+## 🤝 Contributing Guidelines
 
----
-
-## 🤝 Contribution Guidelines
 - Fork the repository
-- Create a new branch for your feature or fix
-- Work only on admin-approved issues
-- Write clean, readable, and well-documented code
-- Make meaningful commit messages
-- Submit a Pull Request with a clear description
-- Wait for Project Admin review before merge
+- Create a new branch for your feature/fix
+- Work only on assigned issues
+- Follow clean and readable code practices
+- Write meaningful commit messages
+- Submit a Pull Request
+- Wait for review before merging
 
 ---
 
-## 🏷 Issue Management
-Issues are created and managed by the Project admin
+## 🏷 Issue Guidelines
 
-Contributors must request issue assignment before starting work
+- Only admin-assigned issues should be worked on
+- One issue per contributor
+- Follow issue labels (easy / medium / hard / documentation)
+- Inactive contributors may be unassigned
 
-One issue is assigned to one contributor at a time
-
-Inactive contributors may be unassigned
-
-Issues are clearly defined and achievable
-
-### Issue Labels Used
-- easy
-- medium
-- hard
-- good first issue
-- bug
-- feature
-- documentation
-- help wanted
+--- 
+🔀 Pull Request Rules
+- Must be linked to an issue
+- No spam or duplicate PRs
+- Code should be original
+- Admin review is mandatory before merge
 
 ---
-
-## 🔍 Pull Request Rules
-- PRs must be linked to an assigned issue
-- Code must be original and plagiarism-free
-- Low-effort, spam, or duplicate PRs will be rejected
-- Admin may request changes before approval
-- Only merged PRs are considered valid contributions
-
----
-
-## 🚀 Future Enhancements
-Leaderboard system
-
----
-
-## 🚀 Future Enhancements
+🚀 Future Improvements
 - Leaderboard system
-- Advanced learning analytics
-- Enhanced AI personalization
+- Advanced analytics dashboard
+- Improved AI personalization
 - Mobile application support
-
 ---
 
+📜 License
+
+- This project is licensed under the MIT License.
+
 ---
-
-## 📜 License
-This project is licensed under the MIT License. See the LICENSE file for details.
-
----
-
-## 📬 Contact
+📬 Contact
 - LinkedIn: Aditi Anand
 - Email: aditianand09tkp@gmail.com
-
-## 📬 Contact
-LinkedIn: Aditi Anand
-
-Email: aditianand09tkp@gmail.com
-
----
