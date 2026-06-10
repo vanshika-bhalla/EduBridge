@@ -1,51 +1,51 @@
 # 🚀 EduBridge
 
-EduBridge is a full-stack web application designed to provide interactive learning resources, quizzes, and AI-powered guidance for students.  
-It helps learners explore web development, AI/ML concepts, and career opportunities through a modern and user-friendly platform.
+EduBridge is a full-stack web application designed to provide interactive learning resources, quizzes, and AI-powered guidance for students. It helps learners explore web development, AI/ML concepts, and career opportunities through a modern and user-friendly platform.
 
 ---
 
-## 📌 Overview
+## 📌 Project Overview
 
-EduBridge bridges the gap between learning and career guidance by combining structured educational content with AI assistance.
-
-Users can:
+EduBridge bridges the gap between learning and career guidance by combining structured educational content with AI-powered assistance. Students can:
 - Learn technical concepts
-- Attempt quizzes
-- Get AI-based guidance
-- Explore career paths
+- Test their knowledge through quizzes  
+- Receive AI-powered career and learning suggestions  
 
 ---
 
 ## ✨ Features
 
-- 🔐 User Authentication (Login & Registration)
-- 👤 Personalized User Profiles
-- 🧠 Interactive Quizzes
-- 🤖 AI-Powered Learning Assistant
-- 🎯 Career Guidance System
-- 📱 Fully Responsive UI
+- 🔐 **User Authentication** – Secure login and registration system  
+- 👤 **Personalized Profiles** – Users can manage and update their profiles  
+- 🧠 **Quizzes** – Assess knowledge on various technical topics  
+- 🤖 **AI Assistance** – AI-powered learning and guidance  
+- 🎯 **Career Guidance** – Resources and career advice  
+- 📱 **Responsive Design** – Works across desktops, tablets, and mobile devices  
 
 ---
 
-## 🛠 Tech Stack
+## 🛠 Technologies Used
 
 ### 🌐 Frontend
-- HTML5
-- CSS3
-- JavaScript
+- **HTML:** Semantic structure and accessibility 
+- **CSS:** Styling, layout, and responsiveness  
+- **JavaScript:** Interactivity and API handling  
 
 ### ⚙️ Backend
-- Python
-- Flask
+- **Python:** Core backend language 
+- **Flask:** Lightweight web framework  
 
 ### 🤖 APIs
-- OpenAI API
+- **OpenAI API:** AI-driven features
 
 ### 🔧 Tools
-- Git & GitHub
+- **Git:** Version control
+- **GitHub:** Collaboration and project hosting
 
-## 📂 Project Structure
+---
+
+## 📂 Folder Structure
+
 
 ```
 EduBridge/
@@ -68,86 +68,94 @@ EduBridge/
 ├── career.html
 ```
 
-## ⚙️ Installation & Setup
 
-### 1️⃣ Clone Repository
+## ⚙️ Setup Instructions
+
+1️⃣ Clone the repository
 ```bash
-git clone https://github.com/AditixAnand/EduBridge.git
-cd EduBridge
+  git clone https://github.com/AditixAnand/EduBridge.git
+  cd EduBridge
 ```
-
-### 2️⃣ Setup Backend
-
+2️⃣ Setup Python Backend
 ```bash
-cd backend
-pip install flask python-dotenv openai
+  cd backend
+  pip install flask python-dotenv openai
 ```
-(Optional) Create Virtual Environment
+💡 Recommended: Use a virtual environment:
+```bash
+  python -m venv venv
+  venv\Scripts\activate   # Windows
+  source venv/bin/activate # macOS/Linux
 ```
-python -m venv venv
+3️⃣ Run the Backend
+```bash
+  python app.py
 ```
+4️⃣ Open the Frontend  
+  Open index.html in your browser.  
+  
+**✅ Important:**  
 
-Activate it:
-
-Windows:
-```
-venv\Scripts\activate
-```
-Mac/Linux:
-```
-source venv/bin/activate
-```
-3️⃣ Run Server
-```
-python app.py
-```
-4️⃣ Open Application
-
-Open index.html in your browser.
-
-Backend runs at:
-```
+Ensure JavaScript API calls point to:  
+```bash
 http://127.0.0.1:5000/
 ```
-## 🤝 Contributing Guidelines
-
-- Fork the repository
-- Create a new branch for your feature/fix
-- Work only on assigned issues
-- Follow clean and readable code practices
-- Write meaningful commit messages
-- Submit a Pull Request
-- Wait for review before merging
 
 ---
 
-## 🏷 Issue Guidelines
-
-- Only admin-assigned issues should be worked on
-- One issue per contributor
-- Follow issue labels (easy / medium / hard / documentation)
-- Inactive contributors may be unassigned
-
---- 
-🔀 Pull Request Rules
-- Must be linked to an issue
-- No spam or duplicate PRs
-- Code should be original
-- Admin review is mandatory before merge
+## 🤝 Contribution Guidelines
+1️⃣ Fork the repository  
+2️⃣ Create a new branch for your feature or fix  
+3️⃣ Work only on admin-approved issues  
+4️⃣ Write clean, readable, and well-documented code  
+5️⃣ Make meaningful commit messages  
+6️⃣ Submit a Pull Request with a clear description  
+7️⃣ Wait for Project Admin review before merge
 
 ---
-🚀 Future Improvements
+
+## 🏷 Issue Management
+1️⃣ Issues are created and managed by the Project Admin  
+2️⃣ Contributors must request issue assignment before starting work  
+3️⃣ One issue is assigned to one contributor at a time  
+4️⃣ Inactive contributors may be unassigned  
+5️⃣ Issues are clearly defined and achievable
+
+**Issue Labels Used**
+- easy
+- medium
+- hard
+- good first issue
+- bug
+- feature
+- documentation
+- help wanted
+
+---
+
+## 🔍 Pull Request Rules
+1️⃣ PRs must be linked to an assigned issue  
+2️⃣ Code must be original and plagiarism-free  
+3️⃣ Low-effort, spam, or duplicate PRs will be rejected  
+4️⃣ Admin may request changes before approval  
+5️⃣ Only merged PRs are considered valid contributions
+
+
+## 🚀 Future Improvements
 - Leaderboard system
 - Advanced analytics dashboard
 - Improved AI personalization
 - Mobile application support
+  
 ---
 
-📜 License
+## 📜 License
 
-- This project is licensed under the MIT License.
+- This project is licensed under the MIT License. See the LICENSE file for details.
 
 ---
-📬 Contact
+
+## 📬 Contact
 - LinkedIn: Aditi Anand
 - Email: aditianand09tkp@gmail.com
+
